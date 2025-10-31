@@ -1,5 +1,4 @@
 package main;
-
 import javax.swing.JFrame; //*=Jframe
 
 public class Game extends JFrame {
