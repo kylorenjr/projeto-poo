@@ -5,16 +5,20 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Game extends JFrame {
+public class Game extends JFrame implements Runnable {
 
     private GameScreen gameScreen; //criamos um novo objeto GameScreen para podermos usar
     private BufferedImage img; //criação do objeto imagem
-    private double timePerFrame;
-    private long lastFrame;
+    private Thread gameThread;
+
+    private final double FPS_SET = 120.0;
+    private final double UPS_SET = 60.0;
+
+    private int updates;
+    private long lastTimeUPS; //atributo para armazenar os updates por segundo do jogo
+
 
     public Game() throws IOException {
-
-        timePerFrame = 1000000000.0 / 60.0; //travando o jogo a 60fps
 
         importImg(); //metodo que permite a exibição da imagem na tela
 
@@ -36,20 +40,66 @@ public class Game extends JFrame {
         //IOExeception é necessário para evitar bugs ao carregar imagem e não causar problemas maiores se não conseguir achar a imagem
     }
 
-    private void loopGame(){
+    private void start(){
+        gameThread = new Thread(this){};//criação da função de inicio e atribuição de uma thread para ela
 
-        while(true) {
-            if (System.nanoTime() - lastFrame >= timePerFrame) {
-                lastFrame = System.nanoTime();
-                repaint();
-            } else {
-                //n precisa fazer nada
-            }
+        gameThread.start();//lembrete: sempre iniciar as threads (obs, comentar essa linha faz o jogo não atualizar!)
+    }
+
+    private void callUPS(){
+        if(System.currentTimeMillis() - lastTimeUPS >= 1000){
+            System.out.println("UPS: " + updates);
+            updates = 0;
+            lastTimeUPS = System.currentTimeMillis();
         }
+    }
+
+    private void updateGame(){
+        //System.out.println("Jogo atualizado!");//apenas para teste de atualização, remoção póstuma
     }
 
     public static void main(String[] args) throws IOException {
         Game game = new Game();
-        game.loopGame();
+        game.start();
+    }
+
+    @Override
+    public void run() { //função que permite rodar em diferentes threads
+
+        double timePerFrame = 1000000000.0 / FPS_SET;
+        double timePerUpdate = 1000000000.0 / UPS_SET;
+
+        long lastFrame = System.nanoTime();
+        long lastUpdate = System.nanoTime();
+
+        long lastTimeCheck = System.currentTimeMillis();
+
+        int frames = 0;
+        int updates = 0;
+
+
+        while(true){
+        if (System.nanoTime() - lastFrame >= timePerFrame) {
+            repaint();
+            lastFrame = System.nanoTime();
+            frames++;
+        }
+
+        if(System.nanoTime() - lastUpdate >= timePerUpdate){
+            updateGame();
+            lastUpdate = System.nanoTime();
+            updates++;
+            }
+
+        if(System.currentTimeMillis() - lastTimeCheck >= 1000){
+            System.out.println("FPS: " + frames + " | UPS: " + updates);
+            frames = 0;
+            updates = 0;
+            lastTimeCheck = System.currentTimeMillis();
+            }
+
+        }
+
+
     }
 }

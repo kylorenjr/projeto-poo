@@ -11,8 +11,6 @@ public class GameScreen extends JPanel{
 
     private Random random; //criação do objeto random
     private BufferedImage img; //criação do objeto img
-    private long lastTime;
-    private int frames;
 
     private ArrayList<BufferedImage> sprites = new ArrayList<>(); //inicializando um array list para carregar todas as sprites que vão ser usadas no jogo
 
@@ -45,18 +43,6 @@ public class GameScreen extends JPanel{
             for(int x = 0; x < 20; x++) {
                 g.drawImage(sprites.get(getRndInt()), x * 32, y * 32, null);
             }
-        }
-
-        callFPS();
-        //repaint();
-    }
-
-    private void callFPS(){
-        frames++;
-        if(System.currentTimeMillis() - lastTime >= 1000){//toda vez q 1 segundo se passar, o fps será printado no console
-            System.out.println("FPS: " + frames);
-            frames = 0;
-            lastTime = System.currentTimeMillis();
         }
     }
 
