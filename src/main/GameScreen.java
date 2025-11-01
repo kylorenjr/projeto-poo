@@ -11,6 +11,8 @@ public class GameScreen extends JPanel{
 
     private Random random; //criação do objeto random
     private BufferedImage img; //criação do objeto img
+    private long lastTime;
+    private int frames;
 
     private ArrayList<BufferedImage> sprites = new ArrayList<>(); //inicializando um array list para carregar todas as sprites que vão ser usadas no jogo
 
@@ -38,13 +40,6 @@ public class GameScreen extends JPanel{
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);//delega para o JPanel as configurações de vídeo
-
-        //g.drawRect(50, 50, 120, 100);
-        //g.setColor(Color.BLUE);
-        //g.fillRect(50, 50, 120, 100);
-
-        //g.drawImage(img, 0, 0, null);
-
         //este nested loop é apenas para confirmar que a imagem foi carregada e que os sprites foram armazenados no array list criado acima, não será mantido no jogo, é apenas um teste
         for(int y = 0; y < 20; y++) {
             for(int x = 0; x < 20; x++) {
@@ -52,6 +47,17 @@ public class GameScreen extends JPanel{
             }
         }
 
+        callFPS();
+        //repaint();
+    }
+
+    private void callFPS(){
+        frames++;
+        if(System.currentTimeMillis() - lastTime >= 1000){//toda vez q 1 segundo se passar, o fps será printado no console
+            System.out.println("FPS: " + frames);
+            frames = 0;
+            lastTime = System.currentTimeMillis();
+        }
     }
 
     private int getRndInt() {
