@@ -1,6 +1,13 @@
 package main;
+import inputs.KeyListener;
+import inputs.MouseListener;
+import scenes.Playing;
+import scenes.Settings;
+import scenes.Menu;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame; //*=Jframe
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +15,6 @@ import java.io.InputStream;
 public class Game extends JFrame implements Runnable {
 
     private GameScreen gameScreen; //criamos um novo objeto GameScreen para podermos usar
-    private BufferedImage img; //criação do objeto imagem
     private Thread gameThread;
 
     private final double FPS_SET = 120.0;
@@ -17,27 +23,43 @@ public class Game extends JFrame implements Runnable {
     private int updates;
     private long lastTimeUPS; //atributo para armazenar os updates por segundo do jogo
 
+    private MouseListener mouseListener;
+    private KeyListener keyListener;
+
+    private Render render;
+    private Menu menu;
+    private Playing playing;
+    private Settings settings;
 
     public Game() throws IOException {
 
-        importImg(); //metodo que permite a exibição da imagem na tela
-
-        setSize(600, 600); //tamanho da janela
         setDefaultCloseOperation(EXIT_ON_CLOSE); //oq acontece por padrão quando fechamos a janela, nesse caso encerra o game
         setLocationRelativeTo(null); //diz onde a janela vai aparecer quando iniciar o game
-
-        gameScreen = new GameScreen(img); // aqui inicializamos o objeto GameScreen
+        initClasses();
         add(gameScreen);
+        pack();
         setVisible(true);//colocando o setVisible em baixo para evitar bugs
     }
 
-    private void importImg() throws IOException {
+    private void initClasses() throws IOException {
+        render = new Render(this);
+        gameScreen = new GameScreen(this);
+        menu = new Menu(this);
+        playing = new Playing(this);
+        settings = new Settings(this);
+    }
 
-        InputStream is = getClass().getResourceAsStream("/AtlasSprites.png");
+    private void initInputs() {
 
-        img = ImageIO.read(is);
+        //metodo que inicializa os inputs do teclado e do mouse do usuario
+        mouseListener = new MouseListener();
+        keyListener = new KeyListener();
 
-        //IOExeception é necessário para evitar bugs ao carregar imagem e não causar problemas maiores se não conseguir achar a imagem
+        addMouseListener(mouseListener);
+        addMouseMotionListener(mouseListener);
+        addKeyListener(keyListener);
+
+        requestFocus(); //apenas para prevenir bugs
     }
 
     private void start(){
@@ -60,6 +82,7 @@ public class Game extends JFrame implements Runnable {
 
     public static void main(String[] args) throws IOException {
         Game game = new Game();
+        game.initInputs();
         game.start();
     }
 
@@ -77,17 +100,21 @@ public class Game extends JFrame implements Runnable {
         int frames = 0;
         int updates = 0;
 
+        long now;
+
 
         while(true){
-        if (System.nanoTime() - lastFrame >= timePerFrame) {
+
+            now = System.nanoTime();
+        if (now - lastFrame >= timePerFrame) {
             repaint();
-            lastFrame = System.nanoTime();
+            lastFrame = now;
             frames++;
         }
 
-        if(System.nanoTime() - lastUpdate >= timePerUpdate){
+        if(now - lastUpdate >= timePerUpdate){
             updateGame();
-            lastUpdate = System.nanoTime();
+            lastUpdate = now;
             updates++;
             }
 
@@ -99,7 +126,21 @@ public class Game extends JFrame implements Runnable {
             }
 
         }
+    }
 
+    public Render getRender() {
+        return render;
+    }
 
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public Playing getPlaying() {
+        return playing;
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 }
