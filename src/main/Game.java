@@ -33,9 +33,11 @@ public class Game extends JFrame implements Runnable {
 
     public Game() throws IOException {
 
+        initClasses();
+
         setDefaultCloseOperation(EXIT_ON_CLOSE); //oq acontece por padrão quando fechamos a janela, nesse caso encerra o game
         setLocationRelativeTo(null); //diz onde a janela vai aparecer quando iniciar o game
-        initClasses();
+        setResizable(false);
         add(gameScreen);
         pack();
         setVisible(true);//colocando o setVisible em baixo para evitar bugs
