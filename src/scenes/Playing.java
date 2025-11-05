@@ -19,7 +19,7 @@ public class Playing extends GameScene implements SceneMethods {
 
     public Playing(Game game) throws IOException {
         super(game);
-
+        initButtons();
         lvl = LevelBuild.getLevelData();
         tileManager = new TileManager();
     }
