@@ -1,30 +1,25 @@
 package main;
-import inputs.KeyListener;
-import inputs.MouseListener;
+
 import scenes.Playing;
 import scenes.Settings;
 import scenes.Menu;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFrame; //*=Jframe
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import javax.swing.JFrame;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class Game extends JFrame implements Runnable {
 
-    private GameScreen gameScreen; //criamos um novo objeto GameScreen para podermos usar
+    private GameScreen gameScreen;
     private Thread gameThread;
 
     private final double FPS_SET = 120.0;
     private final double UPS_SET = 60.0;
 
     private int updates;
-    private long lastTimeUPS; //atributo para armazenar os updates por segundo do jogo
+    private long lastTimeUPS;
 
-    private MouseListener mouseListener;
-    private KeyListener keyListener;
+    //private MouseListener mouseListener;
+    //private KeyListener keyListener;
 
     private Render render;
     private Menu menu;
@@ -35,12 +30,12 @@ public class Game extends JFrame implements Runnable {
 
         initClasses();
 
-        setDefaultCloseOperation(EXIT_ON_CLOSE); //oq acontece por padrão quando fechamos a janela, nesse caso encerra o game
-        setLocationRelativeTo(null); //diz onde a janela vai aparecer quando iniciar o game
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setResizable(false);
         add(gameScreen);
         pack();
-        setVisible(true);//colocando o setVisible em baixo para evitar bugs
+        setVisible(true);
     }
 
     private void initClasses() throws IOException {
@@ -51,23 +46,11 @@ public class Game extends JFrame implements Runnable {
         settings = new Settings(this);
     }
 
-    private void initInputs() {
-
-        //metodo que inicializa os inputs do teclado e do mouse do usuario
-        mouseListener = new MouseListener();
-        keyListener = new KeyListener();
-
-        addMouseListener(mouseListener);
-        addMouseMotionListener(mouseListener);
-        addKeyListener(keyListener);
-
-        requestFocus(); //apenas para prevenir bugs
-    }
 
     private void start(){
-        gameThread = new Thread(this){};//criação da função de inicio e atribuição de uma thread para ela
+        gameThread = new Thread(this){};
 
-        gameThread.start();//lembrete: sempre iniciar as threads (obs, comentar essa linha faz o jogo não atualizar!)
+        gameThread.start();
     }
 
     private void callUPS(){
@@ -79,17 +62,17 @@ public class Game extends JFrame implements Runnable {
     }
 
     private void updateGame(){
-        //System.out.println("Jogo atualizado!");//apenas para teste de atualização, remoção póstuma
     }
 
     public static void main(String[] args) throws IOException {
         Game game = new Game();
-        game.initInputs();
+        game.gameScreen.initInputs();
         game.start();
+
     }
 
     @Override
-    public void run() { //função que permite rodar em diferentes threads
+    public void run() {
 
         double timePerFrame = 1000000000.0 / FPS_SET;
         double timePerUpdate = 1000000000.0 / UPS_SET;
@@ -104,27 +87,28 @@ public class Game extends JFrame implements Runnable {
 
         long now;
 
-
-        while(true){
-
+        while (true) {
             now = System.nanoTime();
-        if (now - lastFrame >= timePerFrame) {
-            repaint();
-            lastFrame = now;
-            frames++;
-        }
 
-        if(now - lastUpdate >= timePerUpdate){
-            updateGame();
-            lastUpdate = now;
-            updates++;
+
+            if (now - lastFrame >= timePerFrame) {
+                repaint();
+                lastFrame = now;
+                frames++;
             }
 
-        if(System.currentTimeMillis() - lastTimeCheck >= 1000){
-            System.out.println("FPS: " + frames + " | UPS: " + updates);
-            frames = 0;
-            updates = 0;
-            lastTimeCheck = System.currentTimeMillis();
+
+            if (now - lastUpdate >= timePerUpdate) {
+                updateGame();
+                lastUpdate = now;
+                updates++;
+            }
+
+            if (System.currentTimeMillis() - lastTimeCheck >= 1000) {
+                System.out.println("FPS: " + frames + " | UPS: " + updates);
+                frames = 0;
+                updates = 0;
+                lastTimeCheck = System.currentTimeMillis();
             }
 
         }
