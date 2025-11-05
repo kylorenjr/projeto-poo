@@ -1,6 +1,7 @@
 package inputs;
 
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import main.Game;
 import main.GameStates;
@@ -15,7 +16,24 @@ public class MyMouseListener implements java.awt.event.MouseListener, java.awt.e
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        switch (GameStates.gameState) {
+            case MENU:
+                game.getMenu().mouseDragged(e.getX(), e.getY());
+                break;
+            case PLAYING:
+                try {
+                    game.getPlaying().mouseDragged(e.getX(), e.getY());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                break;
+            case SETTINGS:
+                game.getSettings().mouseDragged(e.getX(), e.getY());
+                break;
+            default:
+                break;
 
+        }
     }
 
     @Override
@@ -46,7 +64,11 @@ public class MyMouseListener implements java.awt.event.MouseListener, java.awt.e
                     game.getMenu().mouseClicked(e.getX(), e.getY());
                     break;
                 case PLAYING:
-                    game.getPlaying().mouseClicked(e.getX(), e.getY());
+                    try {
+                        game.getPlaying().mouseClicked(e.getX(), e.getY());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case SETTINGS:
                     game.getSettings().mouseClicked(e.getX(), e.getY());
