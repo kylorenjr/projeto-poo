@@ -1,10 +1,21 @@
 package scenes;
 
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+
 import java.awt.*;
 
 public interface SceneMethods {
 
-    //interface que vai conter todos os metodos que os cenarios precisam
     public void render(Graphics g);
 
+    public void mouseClicked(int x, int y);
+
+    public void mouseMoved(int x, int y);
+
+    public void mousePressed(int x, int y);
+
+    public void mouseReleased(int x, int y);
+
 }
+

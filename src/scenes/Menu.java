@@ -16,14 +16,14 @@ public class Menu extends GameScene implements SceneMethods {
 
     private ArrayList<BufferedImage> sprites = new ArrayList<>();
     private BufferedImage img;
-    //private Random random;
+    private Random random;
 
     private MyButton bPlaying, bSettings, bQuit;
 
 
     public Menu(Game game) throws IOException {
         super(game);
-        //random = new Random();
+        random = new Random();
         importImg();
         loadSprites();
         initButtons();

@@ -4,13 +4,13 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.awt.Graphics;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Render {
 
-    //classe que vai controlar os diferentes cenarios do jogo
     private Game game;
 
     public Render(Game game) throws IOException {
