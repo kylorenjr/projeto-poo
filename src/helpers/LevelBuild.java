@@ -4,7 +4,6 @@ public class LevelBuild {
 
     public static int[][] getLevelData() {
 
-        //cria um array 2d onde cada valor sera um caminho no nivel
 
         int[][] lvl = {
 
