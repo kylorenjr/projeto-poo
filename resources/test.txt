@@ -1,0 +1,4 @@
+teste de leitura de arquivos pelo game
+teste1
+teste2
+teste3

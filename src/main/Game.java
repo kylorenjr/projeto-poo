@@ -7,7 +7,7 @@ import scenes.Menu;
 import javax.swing.JFrame;
 import java.io.IOException;
 
-public class Game extends JFrame implements Runnable {
+public class                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Game extends JFrame implements Runnable {
 
     private GameScreen gameScreen;
     private Thread gameThread;
