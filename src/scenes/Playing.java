@@ -32,7 +32,23 @@ public class Playing extends GameScene implements SceneMethods {
 
         //LoadSave.CreateFile();
         //LoadSave.WriteToFile();
-        LoadSave.ReadFromFile();
+        //LoadSave.ReadFromFile();
+
+        createDefaultLevel();
+        loadDefaultLevel();
+
+    }
+
+    private void loadDefaultLevel() {
+        lvl = LoadSave.GetLevelData("novo_nível");
+    }
+
+    private void createDefaultLevel(){
+        int[] arr = new int[400];
+        for (int i = 0; i < arr.length; i++)
+            arr[i] = 0;
+
+        LoadSave.CreatLevel("novo_nível", arr);
     }
 
     @Override

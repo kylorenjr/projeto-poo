@@ -7,6 +7,7 @@ import java.io.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LoadSave {
@@ -35,26 +36,42 @@ public class LoadSave {
             }
         }
 
-        public static void WriteToFile(){
-            File txtFile = new File("resources/testSaveFile.txt");
+        public static void CreatLevel(String name, int[] idArr){
+            File newLevel = new File("resources/" + name + ".txt"); //o nome do arquivo será correspondente ao level
+            if(newLevel.exists()){
+                System.out.println("O arquivo " + name + " ja existe.");
+                return;
+            } else {
+                try {
+                    newLevel.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            WriteToFile(newLevel, idArr);
+        }
+
+        public static void WriteToFile(File f, int[] idArr){
 
             try {
-                PrintWriter pw = new PrintWriter(txtFile);
-                pw.println("An? tomar no cu va");
-                pw.println("suspicous bush");
+                PrintWriter pw = new PrintWriter(f);
+                for(Integer i : idArr)
+                    pw.println(i);
+
                 pw.close();
             } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
 
-        public static void ReadFromFile(){
-            File txtFile = new File("resources/test.txt");
-            try {
-                Scanner sc = new Scanner(txtFile);
+        private static ArrayList<Integer> ReadFromFile(File file){
+            ArrayList<Integer> list = new ArrayList<>();
 
-                while (sc.hasNextLine()){
-                    System.out.println(sc.nextLine());
+            try {
+                Scanner sc = new Scanner(file);
+
+                while (sc.hasNextLine()){//NextLine?
+                    list.add(Integer.parseInt(sc.nextLine()));
                 }
 
                 sc.close();
@@ -62,6 +79,21 @@ public class LoadSave {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+
+            return list;
+        }
+
+        public static int[][] GetLevelData(String name){
+            File lvlFile = new File("resources/" + name + ".txt");
+
+            if (lvlFile.exists()){
+                ArrayList<Integer> list = ReadFromFile(lvlFile);
+                return Utilz.ArrayListTo2Dint(list, 20, 20);
+            } else {
+                System.out.println("o arquivo " + name + " não existe");
+                return null;
+            }
+
         }
 
 }
