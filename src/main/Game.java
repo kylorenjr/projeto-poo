@@ -1,5 +1,8 @@
 package main;
 
+import helpers.LoadSave;
+import managers.TileManager;
+import scenes.Editing;
 import scenes.Playing;
 import scenes.Settings;
 import scenes.Menu;
@@ -25,10 +28,14 @@ public class                                                                    
     private Menu menu;
     private Playing playing;
     private Settings settings;
+    private Editing editing;
+
+    private TileManager tileManager;
 
     public Game() throws IOException {
 
         initClasses();
+        createDefaultLevel();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -38,12 +45,22 @@ public class                                                                    
         setVisible(true);
     }
 
+    private void createDefaultLevel(){
+        int[] arr = new int[400];
+        for (int i = 0; i < arr.length; i++)
+            arr[i] = 0;
+
+        LoadSave.CreatLevel("novo_nível", arr);
+    }
+
     private void initClasses() throws IOException {
+        tileManager = new TileManager();
         render = new Render(this);
         gameScreen = new GameScreen(this);
         menu = new Menu(this);
         playing = new Playing(this);
         settings = new Settings(this);
+        editing = new Editing(this);
     }
 
 
@@ -128,5 +145,13 @@ public class                                                                    
 
     public Settings getSettings() {
         return settings;
+    }
+
+    public Editing getEditor() {
+        return editing;
+    }
+
+    public TileManager getTileManager() {
+        return tileManager;
     }
 }
