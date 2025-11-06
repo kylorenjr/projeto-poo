@@ -39,6 +39,10 @@ public class Playing extends GameScene implements SceneMethods {
 
     }
 
+    public void saveLevel(){
+        LoadSave.SaveLevel("novo_nível", lvl);
+    }
+
     private void loadDefaultLevel() {
         lvl = LoadSave.GetLevelData("novo_nível");
     }
