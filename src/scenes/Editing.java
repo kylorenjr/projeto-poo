@@ -6,6 +6,7 @@ import objects.Tile;
 import ui.ToolBar;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -105,12 +106,14 @@ public class Editing extends GameScene implements SceneMethods{
 
     @Override
     public void mousePressed(int x, int y) {
-
+        if(y >= 640) {
+            toolBar.mousePressed(x, y);
+        }
     }
 
     @Override
     public void mouseReleased(int x, int y) {
-
+        toolBar.mouseReleased(x, y);
     }
 
     @Override
@@ -120,5 +123,10 @@ public class Editing extends GameScene implements SceneMethods{
         }else{
             changeTile(x, y);
         }
+    }
+
+    public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_R)
+            toolBar.rotateSprite();
     }
 }
