@@ -66,6 +66,8 @@ public class Playing extends GameScene implements SceneMethods {
     public void mouseClicked(int x, int y) throws IOException {
         if(y >= 640)
             bottomBar.mouseClicked(x, y);
+        else
+            enemyManager.addEnemy(x, y);
     }
 
     @Override
