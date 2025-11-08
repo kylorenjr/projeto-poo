@@ -2,7 +2,9 @@ package scenes;
 
 import helpers.LoadSave;
 import main.Game;
+import managers.EnemyManager;
 import ui.ActionBar;
+import managers.EnemyManager;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -14,6 +16,7 @@ public class Playing extends GameScene implements SceneMethods {
     private int [][] lvl;
     private ActionBar bottomBar;
     private int mouseX, mouseY;
+    private EnemyManager enemyManager;
 
     public Playing(Game game) throws IOException {
         super(game);
@@ -21,6 +24,7 @@ public class Playing extends GameScene implements SceneMethods {
 
         bottomBar = new ActionBar(0, 640, 640, 100, this);
 
+        enemyManager = new EnemyManager(this);
 
     }
 
@@ -32,11 +36,16 @@ public class Playing extends GameScene implements SceneMethods {
         this.lvl = lvl;
     }
 
+    public void update(){
+        enemyManager.update();
+    }
+
     @Override
     public void render(Graphics g) {
 
         drawLevel(g);
         bottomBar.draw(g);
+        enemyManager.draw(g);
 
     }
 
