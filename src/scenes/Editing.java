@@ -20,6 +20,7 @@ public class Editing extends GameScene implements SceneMethods{
     private ToolBar toolBar;
     private int animationIndex;
     private int tick;
+    private int ANIMATION_SPEED = 25;
 
     public Editing(Game game) {
         super(game);
@@ -43,7 +44,7 @@ public class Editing extends GameScene implements SceneMethods{
 
     private void updateTick() {
         tick++;
-        if(tick >= 20){
+        if(tick >= ANIMATION_SPEED){
             tick = 0;
             animationIndex++;
             if(animationIndex >= 4)
