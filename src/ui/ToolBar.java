@@ -8,14 +8,20 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import static main.GameStates.MENU;
+import static main.GameStates.*;
 import static main.GameStates.SetGameState;
 
 public class ToolBar extends Bar{
 
+    private Map<MyButton, ArrayList<Tile>> map = new HashMap<MyButton, ArrayList<Tile>>();
+
+    private MyButton bGrass, bWater, bRoadS, bRoadC, bWaterC, bWaterB, bWaterI;
+
     private MyButton bMenu, bSave;
-    private ArrayList<MyButton> tileButtons = new ArrayList<>();
+    //private ArrayList<MyButton> tileButtons = new ArrayList<>();
     private Tile selectedTile;
     private Editing editing;
 
@@ -36,11 +42,22 @@ public class ToolBar extends Bar{
         int xOffset = (int)(w * 1.1f);
         int i = 0;
 
-        for(Tile tile : editing.getGame().getTileManager().tiles) {
+        bGrass = new MyButton("Grass", xStart, yStart, w, h, i++);
+        bWater = new MyButton("Water", xStart + xOffset, yStart, w, h, i++);
 
-            tileButtons.add(new MyButton(tile.getName(), xStart + xOffset * i, yStart, w, h, i));
-            i++;
-        }
+        initMapButton(bRoadS, editing.getGame().getTileManager().getRoadsS(), xStart, yStart, xOffset, w, h, i++);
+        initMapButton(bRoadS, editing.getGame().getTileManager().getRoadsC(), xStart, yStart, xOffset, w, h, i++);
+        initMapButton(bRoadS, editing.getGame().getTileManager().getCorners(), xStart, yStart, xOffset, w, h, i++);
+        initMapButton(bRoadS, editing.getGame().getTileManager().getBeaches(), xStart, yStart, xOffset, w, h, i++);
+        initMapButton(bRoadS, editing.getGame().getTileManager().getIslands(), xStart, yStart, xOffset, w, h, i++);
+
+    }
+
+    private void initMapButton(MyButton b, ArrayList<Tile> list, int x, int y, int xOff, int w, int h, int id) {
+
+        b= new MyButton("", x + xOff * id, y, w, h, id);
+        map.put(b, list);
+
     }
 
     private void saveLevel() {
@@ -60,9 +77,24 @@ public class ToolBar extends Bar{
         bMenu.draw(g);
         bSave.draw(g);
 
-        drawTileButtons(g);
+        drawNormalButton(g, bGrass);
+        drawNormalButton(g, bWater);
         drawSelectedTile(g);
+        drawMapButtons(g);
 
+    }
+
+    private void drawNormalButton(Graphics g, MyButton b) {
+        g.drawImage(getButtImg(b.getId()), b.x, b.y, b.width, b.height, null);
+    }
+
+    private void drawMapButtons(Graphics g) {
+        for(Map.Entry<MyButton, ArrayList<Tile>> entry : map.entrySet()) {
+            MyButton b = entry.getKey();
+            BufferedImage img = entry.getValue().getFirst().getSprite();
+
+            g.drawImage(img, b.x, b.y, b.width, b.height, null);
+        }
     }
 
     private void drawSelectedTile(Graphics g) {
@@ -73,7 +105,7 @@ public class ToolBar extends Bar{
         }
     }
 
-    private void drawTileButtons(Graphics g) {
+    /*private void drawTileButtons(Graphics g) {
         for(MyButton b : tileButtons) {
 
             //Sprite
@@ -98,7 +130,7 @@ public class ToolBar extends Bar{
 
 
         }
-    }
+    }*/
 
     public BufferedImage getButtImg(int id) {
         return editing.getGame().getTileManager().getSprite(id);
@@ -110,33 +142,33 @@ public class ToolBar extends Bar{
         else if (bSave.getBounds().contains(x, y))
             saveLevel();
         else{
-            for(MyButton b : tileButtons) {
+            /*for(MyButton b : tileButtons) {
                 if(b.getBounds().contains(x, y)) {
                     selectedTile = editing.getGame().getTileManager().getTile(b.getId());
                     editing.setSelectedTile(selectedTile);
                     return;
                 }
-            }
+            }*/
         }
     }
 
     public void mouseMoved(int x, int y) {
         bMenu.setMouseOver(false);
         bSave.setMouseOver(false);
-        for(MyButton b : tileButtons)
-            b.setMouseOver(false);
+        //for(MyButton b : tileButtons)
+        //    b.setMouseOver(false);
 
         if (bMenu.getBounds().contains(x, y)) {
             bMenu.setMouseOver(true);
         } else if (bSave.getBounds().contains(x, y)) {
             bSave.setMouseOver(true);
         } else {
-            for(MyButton b : tileButtons) {
+            /*for(MyButton b : tileButtons) {
                 if(b.getBounds().contains(x, y)) {
                     b.setMouseOver(true);
                     return;
                 }
-            }
+            }*/
         }
 
     }
@@ -147,12 +179,12 @@ public class ToolBar extends Bar{
         else if (bSave.getBounds().contains(x, y))
             bSave.setMousePressed(true);
         else {
-            for (MyButton b : tileButtons) {
+            /*for (MyButton b : tileButtons) {
                 if(b.getBounds().contains(x, y)) {
                     b.setMousePressed(true);
                     return;
                 }
-            }
+            }*/
         }
 
     }
@@ -160,8 +192,8 @@ public class ToolBar extends Bar{
     public void mouseReleased(int x, int y) {
         bMenu.resetBooleans();
         bSave.resetBooleans();
-        for(MyButton b : tileButtons)
-            b.resetBooleans();
+        //for(MyButton b : tileButtons)
+        //    b.resetBooleans();
 
     }
 }
