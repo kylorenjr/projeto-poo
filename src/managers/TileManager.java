@@ -65,6 +65,7 @@ public class TileManager {
         tiles.addAll(corners);
         tiles.addAll(beaches);
         tiles.addAll(islands);
+
     }
 
     private BufferedImage[] getImgs(int firstX, int firstY, int secondX, int secondY) {
