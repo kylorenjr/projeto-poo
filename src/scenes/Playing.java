@@ -3,33 +3,39 @@ package scenes;
 import helpers.LoadSave;
 import main.Game;
 import managers.EnemyManager;
+import objects.PathPoint;
 import ui.ActionBar;
 import managers.EnemyManager;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class Playing extends GameScene implements SceneMethods {
 
     private int [][] lvl;
-    private ActionBar bottomBar;
+    private ActionBar actionBar;
     private int mouseX, mouseY;
     private EnemyManager enemyManager;
+    private PathPoint start, end;
 
     public Playing(Game game) throws IOException {
         super(game);
         loadDefaultLevel();
 
-        bottomBar = new ActionBar(0, 640, 640, 100, this);
+        actionBar = new ActionBar(0, 640, 640, 160, this);
 
-        enemyManager = new EnemyManager(this);
+        enemyManager = new EnemyManager(this, start, end);
 
     }
 
     private void loadDefaultLevel() {
         lvl = LoadSave.GetLevelData("novo_nível");
+        ArrayList<PathPoint> points = LoadSave.GetLevelPathPoints("novo_nível");
+        start = points.get(0);
+        end = points.get(1);
     }
 
     public void setLevel(int [][] lvl) {
@@ -45,7 +51,7 @@ public class Playing extends GameScene implements SceneMethods {
     public void render(Graphics g) {
 
         drawLevel(g);
-        bottomBar.draw(g);
+        actionBar.draw(g);
         enemyManager.draw(g);
 
     }
@@ -83,7 +89,7 @@ public class Playing extends GameScene implements SceneMethods {
     @Override
     public void mouseClicked(int x, int y) throws IOException {
         if(y >= 640)
-            bottomBar.mouseClicked(x, y);
+            actionBar.mouseClicked(x, y);
 //        else
 //            enemyManager.addEnemy(x, y);
     }
@@ -91,7 +97,7 @@ public class Playing extends GameScene implements SceneMethods {
     @Override
     public void mouseMoved(int x, int y) {
         if(y >= 640) {
-            bottomBar.mouseMoved(x, y);
+            actionBar.mouseMoved(x, y);
         }else{
             mouseX = (x / 32) * 32;
             mouseY = (y / 32) * 32;
@@ -102,13 +108,13 @@ public class Playing extends GameScene implements SceneMethods {
     @Override
     public void mousePressed(int x, int y) {
         if(y >= 640) {
-            bottomBar.mousePressed(x, y);
+            actionBar.mousePressed(x, y);
         }
     }
 
     @Override
     public void mouseReleased(int x, int y) {
-        bottomBar.mouseReleased(x, y);
+        actionBar.mouseReleased(x, y);
     }
 
     @Override

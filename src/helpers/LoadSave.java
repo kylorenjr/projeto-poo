@@ -50,15 +50,20 @@ public class LoadSave {
                     e.printStackTrace();
                 }
             }
-            WriteToFile(newLevel, idArr);
+            WriteToFile(newLevel, idArr, new PathPoint(0, 0), new PathPoint(0, 0));
         }
 
-        public static void WriteToFile(File f, int[] idArr){
+        public static void WriteToFile(File f, int[] idArr, PathPoint start, PathPoint end){
 
             try {
                 PrintWriter pw = new PrintWriter(f);
                 for(Integer i : idArr)
                     pw.println(i);
+
+                pw.println(start.getxCord());
+                pw.println(start.getyCord());
+                pw.println(end.getxCord());
+                pw.println(end.getyCord());
 
                 pw.close();
             } catch (FileNotFoundException e) {
@@ -70,7 +75,7 @@ public class LoadSave {
             File levelFile = new File("resources/" + name + ".txt");
 
             if (levelFile.exists()) {
-                WriteToFile(levelFile, Utilz.twoDto1DArr(idArr));
+                WriteToFile(levelFile, Utilz.twoDto1DArr(idArr), start, end);
             } else {
                 System.out.println("o arquivo " + name + " não existe");
                 return;
@@ -95,6 +100,22 @@ public class LoadSave {
             }
 
             return list;
+        }
+
+        public static ArrayList<PathPoint> GetLevelPathPoints(String name) {
+            File lvlFile = new File("resources/" + name + ".txt");
+
+            if (lvlFile.exists()){
+                ArrayList<Integer> list = ReadFromFile(lvlFile);
+                ArrayList<PathPoint> points = new ArrayList<>();
+                points.add(new PathPoint(list.get(400), list.get(401)));
+                points.add(new PathPoint(list.get(402), list.get(403)));
+                return points;
+            } else {
+                System.out.println("o arquivo " + name + " não existe");
+                return null;
+            }
+
         }
 
         public static int[][] GetLevelData(String name){

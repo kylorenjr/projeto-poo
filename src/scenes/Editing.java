@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static helpers.Constants.Tiles.ROAD_TILE;
 
@@ -32,6 +33,9 @@ public class Editing extends GameScene implements SceneMethods{
 
     private void loadDefaultLevel() {
         lvl = LoadSave.GetLevelData("novo_nível");
+        ArrayList<PathPoint> points = LoadSave.GetLevelPathPoints("novo_nível");
+        start = points.get(0);
+        end = points.get(1);
     }
 
     public void update(){
