@@ -3,29 +3,22 @@ package managers;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import helpers.LoadSave;
 import objects.Tower;
 import scenes.Playing;
 
-import static helpers.Constants.Towers.*;
-
 public class TowerManager {
 
     private Playing playing;
     private BufferedImage[] towerImgs;
-    private Tower tower;
+    private ArrayList<Tower> towers = new ArrayList<>();
+    private int towerAmount = 0;
 
     public TowerManager(Playing playing) throws IOException {
         this.playing = playing;
-
         loadTowerImgs();
-        initTowers();
-    }
-
-    private void initTowers() {
-        tower = new Tower(3 * 32, 6 * 32, 0, ARCHER);
-
     }
 
     private void loadTowerImgs() throws IOException {
@@ -35,14 +28,20 @@ public class TowerManager {
             towerImgs[i] = atlas.getSubimage((4 + i) * 32, 32, 32, 32);
     }
 
-    public void update() {
+    public void addTower(Tower selectedTower, int xPos, int yPos) {
+        towers.add(new Tower(xPos, yPos, towerAmount++, selectedTower.getTowerType()));
+    }
 
+    public void update() {
     }
 
     public void draw(Graphics g) {
+        for (Tower t : towers)
+            g.drawImage(towerImgs[t.getTowerType()], t.getX(), t.getY(), null);
+    }
 
-        g.drawImage(towerImgs[ARCHER], tower.getX(), tower.getY(), null);
-
+    public BufferedImage[] getTowerImgs() {
+        return towerImgs;
     }
 
 }

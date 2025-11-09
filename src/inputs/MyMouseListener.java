@@ -74,11 +74,7 @@ public class MyMouseListener implements java.awt.event.MouseListener, java.awt.e
                     game.getMenu().mouseClicked(e.getX(), e.getY());
                     break;
                 case PLAYING:
-                    try {
-                        game.getPlaying().mouseClicked(e.getX(), e.getY());
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    game.getPlaying().mouseClicked(e.getX(), e.getY());
                     break;
                 case SETTINGS:
                     game.getSettings().mouseClicked(e.getX(), e.getY());
