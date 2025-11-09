@@ -1,5 +1,7 @@
 package helpers;
 
+import objects.PathPoint;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -64,7 +66,7 @@ public class LoadSave {
             }
         }
 
-        public static void SaveLevel(String name, int[][] idArr){
+        public static void SaveLevel(String name, int[][] idArr, PathPoint start, PathPoint end){
             File levelFile = new File("resources/" + name + ".txt");
 
             if (levelFile.exists()) {

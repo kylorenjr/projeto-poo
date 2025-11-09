@@ -2,6 +2,7 @@ package scenes;
 
 import helpers.LoadSave;
 import main.Game;
+import objects.PathPoint;
 import objects.Tile;
 import ui.ToolBar;
 
@@ -9,6 +10,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+import static helpers.Constants.Tiles.ROAD_TILE;
 
 public class Editing extends GameScene implements SceneMethods{
 
@@ -18,6 +21,7 @@ public class Editing extends GameScene implements SceneMethods{
     private boolean drawSelect;
     private int lastTileX, lastTileY, lastTileId;
     private ToolBar toolBar;
+    private PathPoint start, end;
 
 
     public Editing(Game game) throws IOException {
@@ -40,7 +44,17 @@ public class Editing extends GameScene implements SceneMethods{
         drawLevel(g);
         toolBar.draw(g);
         drawSelectedTile(g);
+        drawPathPoints(g);
 
+    }
+
+    private void drawPathPoints(Graphics g) {
+        if(start != null){
+            g.drawImage(toolBar.getStartPathImg(), start.getxCord() * 32, start.getyCord() * 32, 32,32, null);
+        }
+        if(end != null){
+            g.drawImage(toolBar.getEndPathImg(), end.getxCord() * 32, end.getyCord() * 32, 32,32, null);
+        }
     }
 
 
@@ -58,7 +72,7 @@ public class Editing extends GameScene implements SceneMethods{
 
 
     public void saveLevel(){
-        LoadSave.SaveLevel("novo_nível", lvl);
+        LoadSave.SaveLevel("novo_nível", lvl, start, end);
         game.getPlaying().setLevel(lvl);
     }
 
@@ -79,13 +93,23 @@ public class Editing extends GameScene implements SceneMethods{
             int tileX = x / 32;
             int tileY = y / 32;
 
-            if(lastTileX == tileX && lastTileY == tileY && lastTileId == selectedTile.getId())
-                return;
+            if(selectedTile.getId() >= 0){
+                if(lastTileX == tileX && lastTileY == tileY && lastTileId == selectedTile.getId())
+                    return;
 
-            lastTileX = tileX;
-            lastTileY = tileY;
-            lastTileId = selectedTile.getId();
-            lvl[tileY][tileX] = selectedTile.getId();
+                lastTileX = tileX;
+                lastTileY = tileY;
+                lastTileId = selectedTile.getId();
+                lvl[tileY][tileX] = selectedTile.getId();
+            }else{
+                int id = lvl[tileY][tileX];
+                if(game.getTileManager().getTile(id).getTileType() == ROAD_TILE){
+                    if(selectedTile.getId() == -1)
+                        start = new PathPoint(tileX, tileY);
+                    else
+                        end = new PathPoint(tileX, tileY);
+                }
+            }
         }
     }
 
