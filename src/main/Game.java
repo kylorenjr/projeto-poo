@@ -81,6 +81,7 @@ public class                                                                    
     private void updateGame(){
         switch (GameStates.gameState) {
             case EDIT:
+                editing.update();
                 break;
             case MENU:
                 break;
