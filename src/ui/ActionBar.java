@@ -4,8 +4,10 @@ import static main.GameStates.MENU;
 import static main.GameStates.SetGameState;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
+import helpers.Constants.Towers;
 import objects.Tower;
 import scenes.Playing;
 
@@ -16,6 +18,7 @@ public class ActionBar extends Bar {
 
     private MyButton[] towerButtons;
     private Tower selectedTower;
+    private Tower displayedTower;
 
     public ActionBar(int x, int y, int width, int height, Playing playing) {
         super(x, y, width, height);
@@ -57,15 +60,37 @@ public class ActionBar extends Bar {
         g.fillRect(x, y, width, height);
 
         drawButtons(g);
+
+        drawDisplayedTower(g);
+
+    }
+
+    private void drawDisplayedTower(Graphics g) {
+        if (displayedTower != null) {
+            g.setColor(Color.gray);
+            g.fillRect(410, 645, 220, 85);
+            g.setColor(Color.black);
+            g.drawRect(410, 645, 220, 85);
+            g.drawRect(420, 650, 50, 50);
+            g.drawImage(playing.getTowerManager().getTowerImgs()[displayedTower.getTowerType()], 420, 650, 50, 50, null);
+            g.setFont(new Font("LucidaSans", Font.BOLD, 15));
+            g.drawString("" + Towers.GetName(displayedTower.getTowerType()), 490, 660);
+            g.drawString("ID: " + displayedTower.getId(), 490, 675);
+        }
+
+    }
+
+    public void displayTower(Tower t) {
+        displayedTower = t;
     }
 
     public void mouseClicked(int x, int y) {
         if (bMenu.getBounds().contains(x, y))
             SetGameState(MENU);
         else {
-            for(MyButton b : towerButtons) {
-                if(b.getBounds().contains(x, y)) {
-                    selectedTower = new Tower(0,0,-1,b.getId());
+            for (MyButton b : towerButtons) {
+                if (b.getBounds().contains(x, y)) {
+                    selectedTower = new Tower(0, 0, -1, b.getId());
                     playing.setSelectedTower(selectedTower);
                     return;
                 }
