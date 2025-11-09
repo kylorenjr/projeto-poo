@@ -20,10 +20,10 @@ public class Editing extends GameScene implements SceneMethods{
     private ToolBar toolBar;
 
 
-    public Editing(Game game) {
+    public Editing(Game game) throws IOException {
         super(game);
         loadDefaultLevel();
-        toolBar = new ToolBar(0, 640, 640, 100,this);
+        toolBar = new ToolBar(0, 640, 640, 160,this);
     }
 
     private void loadDefaultLevel() {
