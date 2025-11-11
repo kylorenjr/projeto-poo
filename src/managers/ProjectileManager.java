@@ -1,19 +1,18 @@
 package managers;
 
-import enemies.Enemy;
-import helpers.Constants;
-import helpers.LoadSave;
-import objects.Projectile;
-import objects.Tower;
-import scenes.Playing;
-
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static helpers.Constants.Projectiles.*;
+import enemies.Enemy;
+import helpers.LoadSave;
+import objects.Projectile;
+import objects.Tower;
+import scenes.Playing;
 import static helpers.Constants.Towers.*;
+import static helpers.Constants.Projectiles.*;
 
 public class ProjectileManager {
 
@@ -28,55 +27,56 @@ public class ProjectileManager {
     }
 
     private void importImgs() throws IOException {
-        // x = 7 8 9, y 1
         BufferedImage atlas = LoadSave.getSpriteAtlas();
         proj_imgs = new BufferedImage[3];
 
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++)
             proj_imgs[i] = atlas.getSubimage((7 + i) * 32, 32, 32, 32);
-        }
     }
 
     public void newProjectile(Tower t, Enemy e) {
         int type = getProjType(t);
 
-        int xDist = (int)Math.abs(t.getX() - e.getX());
-        int yDist = (int)Math.abs(t.getY() - e.getY());
-        int totDist = xDist + yDist;
+        int xDist = (int) (t.getX() - e.getX());
+        int yDist = (int) (t.getY() - e.getY());
+        int totDist = Math.abs(xDist) + Math.abs(yDist);
 
-        float xPer = (float) xDist / totDist;
-        float yPer = 1.0f - xPer;
+        float xPer = (float) Math.abs(xDist) / totDist;
 
-        float xSpeed = xPer * Constants.Projectiles.GetSpeed(type);
+        float xSpeed = xPer * helpers.Constants.Projectiles.GetSpeed(type);
         float ySpeed = helpers.Constants.Projectiles.GetSpeed(type) - xSpeed;
 
-        if(t.getX() > e.getX()) {
+        if (t.getX() > e.getX())
             xSpeed *= -1;
-        }
-        if(t.getY() > e.getY()) {
+        if (t.getY() > e.getY())
             ySpeed *= -1;
-        }
 
-        projectiles.add(new Projectile(t.getX() + 16, t.getY() + 16, xSpeed, ySpeed, t.getDmg(), proj_id++, type));
+        float arcValue = (float) Math.atan(yDist / (float) xDist);
+        float rotate = (float) Math.toDegrees(arcValue);
+
+        if (xDist < 0)
+            rotate += 180;
+
+        projectiles.add(new Projectile(t.getX() + 16, t.getY() + 16, xSpeed, ySpeed, t.getDmg(), rotate, proj_id++, type));
 
     }
 
     public void update() {
-        for(Projectile p : projectiles) {
-            if(p.isActive()) {
+        for (Projectile p : projectiles)
+            if (p.isActive()) {
                 p.move();
-                if(isProjHittingEnemy(p)){
+                if (isProjHittingEnemy(p)) {
                     p.setActive(false);
-                }else{
-
+                } else {
+                    // we do nothing
                 }
             }
-        }
+
     }
 
-    private boolean isProjHittingEnemy(Projectile p){
-        for(Enemy e : playing.getEnemyManager().getEnemies()){
-            if(e.getBounds().contains(p.getPos())){
+    private boolean isProjHittingEnemy(Projectile p) {
+        for (Enemy e : playing.getEnemyManager().getEnemies()) {
+            if (e.getBounds().contains(p.getPos())) {
                 e.hurt(p.getDmg());
                 return true;
             }
@@ -84,16 +84,23 @@ public class ProjectileManager {
         return false;
     }
 
-    public void draw(Graphics g){
-        for(Projectile p : projectiles) {
-            if(p.isActive()) {
-                g.drawImage(proj_imgs[p.getProjectileType()], (int)p.getPos().x, (int)p.getPos().y, null);
+    public void draw(Graphics g) {
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        for (Projectile p : projectiles)
+            if (p.isActive()) {
+                g2d.translate(p.getPos().x, p.getPos().y);
+                g2d.rotate(Math.toRadians(p.getRotation()));
+                g2d.drawImage(proj_imgs[p.getProjectileType()], -16, -16, null);
+                g2d.rotate(-Math.toRadians(p.getRotation()));
+                g2d.translate(-p.getPos().x, -p.getPos().y);
             }
-        }
+
     }
 
     private int getProjType(Tower t) {
-        switch(t.getTowerType()){
+        switch (t.getTowerType()) {
             case ARCHER:
                 return ARROW;
             case CANNON:
@@ -103,4 +110,5 @@ public class ProjectileManager {
         }
         return 0;
     }
+
 }
