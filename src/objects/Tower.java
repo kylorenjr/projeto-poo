@@ -3,12 +3,28 @@ package objects;
 public class Tower {
 
     private int x, y, id, towerType;
+    private float dmg, range, cooldown;
 
     public Tower(int x, int y, int id, int towerType) {
         this.x = x;
         this.y = y;
         this.id = id;
         this.towerType = towerType;
+        setDefaultDmg();
+        setDefaultRange();
+        setDefaultCooldown();
+    }
+
+    private void setDefaultCooldown() {
+        cooldown = helpers.Constants.Towers.GetDefaultCooldown(towerType);
+    }
+
+    private void setDefaultRange() {
+        range = helpers.Constants.Towers.GetDefaultRange(towerType);
+    }
+
+    private void setDefaultDmg() {
+        dmg = helpers.Constants.Towers.GetStartDmg(towerType);
     }
 
     public int getX() {
@@ -41,6 +57,18 @@ public class Tower {
 
     public void setTowerType(int towerType) {
         this.towerType = towerType;
+    }
+
+    public float getDmg() {
+        return dmg;
+    }
+
+    public float getRange(float range) {
+        return range;
+    }
+
+    public float getCooldown() {
+        return cooldown;
     }
 
 }
