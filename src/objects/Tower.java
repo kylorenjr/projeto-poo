@@ -63,7 +63,7 @@ public class Tower {
         return dmg;
     }
 
-    public float getRange(float range) {
+    public float getRange() {
         return range;
     }
 
