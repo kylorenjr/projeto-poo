@@ -2,6 +2,7 @@ package managers;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class ProjectileManager {
     private ArrayList<Projectile> projectiles = new ArrayList<>();
     private BufferedImage[] proj_imgs, explo_imgs;
     private int proj_id = 0;
+    private ArrayList<Explosion> explosions = new ArrayList<>();
 
     public ProjectileManager(Playing playing) throws IOException {
         this.playing = playing;
@@ -81,18 +83,45 @@ public class ProjectileManager {
                 p.move();
                 if (isProjHittingEnemy(p)) {
                     p.setActive(false);
+                    if(p.getProjectileType() == BOMB){
+                        explosions.add(new Explosion(p.getPos()));
+                        explodeOnEnemies(p);
+                    }
                 } else {
                     // we do nothing
                 }
             }
+        for(Explosion e : explosions){
+            if(e.getIndex() < 7)
+                e.update();
+        }
 
+    }
+
+    private void explodeOnEnemies(Projectile p){
+        for(Enemy e : playing.getEnemyManager().getEnemies()) {
+            if(e.isAlive()){
+                float radius = 40.0f;
+
+                float xDist = Math.abs(p.getPos().x - e.getX());
+                float yDist = Math.abs(p.getPos().y - e.getY());
+
+                float realDist = (float)Math.hypot(xDist, yDist);
+
+                if(realDist <= radius){
+                    e.hurt(p.getDmg());
+                }
+            }
+        }
     }
 
     private boolean isProjHittingEnemy(Projectile p) {
         for (Enemy e : playing.getEnemyManager().getEnemies()) {
-            if (e.getBounds().contains(p.getPos())) {
-                e.hurt(p.getDmg());
-                return true;
+            if(e.isAlive()){
+                if (e.getBounds().contains(p.getPos())) {
+                    e.hurt(p.getDmg());
+                    return true;
+                }
             }
         }
         return false;
@@ -101,10 +130,6 @@ public class ProjectileManager {
     public void draw(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
-
-        for(int i = 0; i < explo_imgs.length; i++){
-            g2d.drawImage(explo_imgs[i], 300 + i *32, 300, null);
-        }
 
         for (Projectile p : projectiles)
             if (p.isActive()) {
@@ -115,10 +140,19 @@ public class ProjectileManager {
                     g2d.rotate(-Math.toRadians(p.getRotation()));
                     g2d.translate(-p.getPos().x, -p.getPos().y);
                 }else{
-                    g2d.drawImage(proj_imgs[p.getProjectileType()], (int)p.getPos().x - 16, (int)p.getPos().y, null);
+                    g2d.drawImage(proj_imgs[p.getProjectileType()], (int)p.getPos().x - 16, (int)p.getPos().y - 16, null);
                 }
             }
+        drawExplosions(g2d);
 
+    }
+
+    private void drawExplosions(Graphics2D g2d) {
+        for(Explosion e :  explosions){
+            if(e.getIndex() < 7) {
+                g2d.drawImage(explo_imgs[e.getIndex()], (int)e.getPos().x - 16, (int)e.getPos().y - 16, null);
+            }
+        }
     }
 
     private int getProjType(Tower t) {
@@ -131,6 +165,33 @@ public class ProjectileManager {
                 return CHAINS;
         }
         return 0;
+    }
+
+    public class Explosion{
+
+        private Point2D.Float pos;
+        private int exploTick = 0, exploIndex = 0;
+
+        public Explosion(Point2D.Float pos) {
+            this.pos = pos;
+        }
+
+        public void update() {
+
+                exploTick++;
+                if(exploTick>= 12) {
+                    exploTick = 0;
+                    exploIndex++;
+                }
+        }
+
+        public int getIndex() {
+            return exploIndex;
+        }
+
+        public Point2D.Float getPos() {
+            return pos;
+        }
     }
 
 }
