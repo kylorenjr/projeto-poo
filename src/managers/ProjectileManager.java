@@ -120,6 +120,9 @@ public class ProjectileManager {
             if(e.isAlive()){
                 if (e.getBounds().contains(p.getPos())) {
                     e.hurt(p.getDmg());
+                    if(p.getProjectileType() == CHAINS){
+                        e.slow();
+                    }
                     return true;
                 }
             }
