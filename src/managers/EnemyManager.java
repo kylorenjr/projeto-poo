@@ -1,11 +1,17 @@
 package managers;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.io.IOException;
+import java.awt.Color;
+import java.awt.Graphics;
 
-import enemies.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import enemies.Bat;
+import enemies.Enemy;
+import enemies.Knight;
+import enemies.Orc;
+import enemies.Wolf;
 import helpers.LoadSave;
 import objects.PathPoint;
 import scenes.Playing;
@@ -30,10 +36,11 @@ public class EnemyManager {
 
         loadEffectImg();
 
-        addEnemy(ORC);
-        addEnemy(BAT);
-        addEnemy(KNIGHT);
-        addEnemy(WOLF);
+//		addEnemy(ORC);
+//		addEnemy(BAT);
+//		addEnemy(KNIGHT);
+//		addEnemy(WOLF);
+
         loadEnemyImgs();
     }
 
@@ -43,22 +50,46 @@ public class EnemyManager {
 
     private void loadEnemyImgs() throws IOException {
         BufferedImage atlas = LoadSave.getSpriteAtlas();
-
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++)
             enemyImgs[i] = atlas.getSubimage(i * 32, 32, 32, 32);
-        }
+
     }
 
     public void update() {
-        for (Enemy e : enemies) {
-            if(e.isAlive()) {
-                updateEnemyMove(e);
-            }
+
+        updateWaveManager();
+
+        if (isTimeForNewEnemy()) {
+            spawnEnemy();
         }
+
+        for (Enemy e : enemies)
+            if (e.isAlive())
+                updateEnemyMove(e);
+
+    }
+
+    private void updateWaveManager() {
+        playing.getWaveManager().update();
+
+    }
+
+    private void spawnEnemy() {
+        addEnemy(playing.getWaveManager().getNextEnemy());
+
+    }
+
+    private boolean isTimeForNewEnemy() {
+        if (playing.getWaveManager().isTimeForNewEnemy()) {
+            if (playing.getWaveManager().isThereMoreEnemiesInWave())
+                return true;
+        }
+
+        return false;
     }
 
     public void updateEnemyMove(Enemy e) {
-        if(e.getLastDir() == -1)
+        if (e.getLastDir() == -1)
             setNewDirectionAndMove(e);
 
         int newX = (int) (e.getX() + getSpeedAndWidth(e.getLastDir(), e.getEnemyType()));
@@ -67,11 +98,10 @@ public class EnemyManager {
         if (getTileType(newX, newY) == ROAD_TILE) {
             e.move(GetSpeed(e.getEnemyType()), e.getLastDir());
         } else if (isAtEnd(e)) {
-            System.out.println("Lives lost");
+
         } else {
             setNewDirectionAndMove(e);
         }
-
     }
 
     private void setNewDirectionAndMove(Enemy e) {
@@ -82,7 +112,7 @@ public class EnemyManager {
 
         fixEnemyOffsetTile(e, dir, xCord, yCord);
 
-        if(isAtEnd(e))
+        if (isAtEnd(e))
             return;
 
         if (dir == LEFT || dir == RIGHT) {
@@ -119,8 +149,8 @@ public class EnemyManager {
     }
 
     private boolean isAtEnd(Enemy e) {
-        if(e.getX() == end.getxCord() * 32)
-            if(e.getY() == end.getyCord() * 32)
+        if (e.getX() == end.getxCord() * 32)
+            if (e.getY() == end.getyCord() * 32)
                 return true;
         return false;
     }
@@ -152,7 +182,7 @@ public class EnemyManager {
         int x = start.getxCord() * 32;
         int y = start.getyCord() * 32;
 
-        switch(enemyType) {
+        switch (enemyType) {
             case ORC:
                 enemies.add(new Orc(x, y, 0));
                 break;
@@ -166,11 +196,12 @@ public class EnemyManager {
                 enemies.add(new Wolf(x, y, 0));
                 break;
         }
+
     }
 
     public void draw(Graphics g) {
         for (Enemy e : enemies) {
-            if(e.isAlive()) {
+            if (e.isAlive()) {
                 drawEnemy(e, g);
                 drawHealthBar(e, g);
                 drawEffects(e, g);
@@ -179,18 +210,19 @@ public class EnemyManager {
     }
 
     private void drawEffects(Enemy e, Graphics g) {
-        if(e.isSlowed()) {
-            g.drawImage(slowEffect, (int)e.getX(), (int)e.getY(), null);
-        }
+        if (e.isSlowed())
+            g.drawImage(slowEffect, (int) e.getX(), (int) e.getY(), null);
+
     }
 
     private void drawHealthBar(Enemy e, Graphics g) {
         g.setColor(Color.red);
-        g.fillRect((int)e.getX() + 16 - (getNewBarWidth(e) / 2), (int)e.getY() - 10, getNewBarWidth(e), 3);
+        g.fillRect((int) e.getX() + 16 - (getNewBarWidth(e) / 2), (int) e.getY() - 10, getNewBarWidth(e), 3);
+
     }
 
     private int getNewBarWidth(Enemy e) {
-        return (int)(HPbarWidth * e.getHealthBarFloat());
+        return (int) (HPbarWidth * e.getHealthBarFloat());
     }
 
     private void drawEnemy(Enemy e, Graphics g) {
@@ -200,4 +232,5 @@ public class EnemyManager {
     public ArrayList<Enemy> getEnemies() {
         return enemies;
     }
+
 }
