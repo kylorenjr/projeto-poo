@@ -8,10 +8,10 @@ public abstract class Enemy {
     protected float x, y;
     protected Rectangle bounds;
     protected int health;
+    protected int maxHealth;
     protected int ID;
     protected int enemyType;
     protected int lastDir;
-    protected int maxHealth;
     protected boolean alive = true;
     protected int slowTickLimit = 120;
     protected int slowTick = slowTickLimit;
@@ -31,25 +31,29 @@ public abstract class Enemy {
         maxHealth = health;
     }
 
-    public void hurt(int dmg){
+    public void hurt(int dmg) {
         this.health -= dmg;
-        if(health <= 0){
+        if (health <= 0)
             alive = false;
-        }
     }
 
-    public void slow(){
-        slowTick= 0;
+    public void kill() {
+
+        alive = false;
+        health = 0;
+    }
+
+    public void slow() {
+        slowTick = 0;
     }
 
     public void move(float speed, int dir) {
         lastDir = dir;
 
-        if(slowTick < slowTickLimit){
+        if (slowTick < slowTickLimit) {
             slowTick++;
             speed *= 0.5f;
         }
-
 
         switch (dir) {
             case LEFT:
@@ -70,11 +74,12 @@ public abstract class Enemy {
     }
 
     private void updateHitbox() {
-        bounds.x =  (int) x;
+        bounds.x = (int) x;
         bounds.y = (int) y;
     }
 
     public void setPos(int x, int y) {
+
         this.x = x;
         this.y = y;
     }
