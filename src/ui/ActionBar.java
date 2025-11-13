@@ -158,19 +158,22 @@ public class ActionBar extends Bar {
             g.setFont(new Font("LucidaSans", Font.BOLD, 15));
             g.drawString("" + Towers.GetName(displayedTower.getTowerType()), 480, 660);
             g.drawString("ID: " + displayedTower.getId(), 480, 675);
+            g.drawString("Tier: " + displayedTower.getTier(), 560, 660);
             drawDisplayedTowerBorder(g);
             drawDisplayedTowerRange(g);
 
             sellTower.draw(g);
             drawButtonFeedback(g, sellTower);
 
-            upgradeTower.draw(g);
-            drawButtonFeedback(g, upgradeTower);
+            if(displayedTower.getTier() < 3 && gold >= getUpgradeAmount(displayedTower)) {
+                upgradeTower.draw(g);
+                drawButtonFeedback(g, upgradeTower);
+            }
 
             if(sellTower.isMouseOver()) {
                 g.setColor(Color.red);
                 g.drawString("Vender por: " + getSellAmount(displayedTower) + "g", 480, 695);
-            }else if(upgradeTower.isMouseOver()) {
+            }else if(upgradeTower.isMouseOver() && gold >= getUpgradeAmount(displayedTower)) {
                 g.setColor(Color.blue);
                 g.drawString("Melhorar por: " + getUpgradeAmount(displayedTower) + "g", 480, 695);
             }
@@ -179,11 +182,15 @@ public class ActionBar extends Bar {
     }
 
     private int getUpgradeAmount(Tower displayedTower) {
-        return 50;
+        return (int)(helpers.Constants.Towers.GetTowerCost(displayedTower.getTowerType()) * 0.3f);
     }
 
     private int getSellAmount(Tower displayedTower) {
-        return helpers.Constants.Towers.GetTowerCost(displayedTower.getTowerType()) / 2;
+
+        int upgradeCost = (displayedTower.getTier() - 1) * getUpgradeAmount(displayedTower);
+        upgradeCost *= 0.5f;
+
+        return helpers.Constants.Towers.GetTowerCost(displayedTower.getTowerType()) / 2 + upgradeCost;
     }
 
     private void drawDisplayedTowerRange(Graphics g) {
@@ -207,7 +214,17 @@ public class ActionBar extends Bar {
     private void sellTowerClicked() {
         playing.removeTower(displayedTower);
         gold += helpers.Constants.Towers.GetTowerCost(displayedTower.getTowerType()) / 2;
+
+        int upgradeCost = (displayedTower.getTier() - 1) * getUpgradeAmount(displayedTower);
+        upgradeCost *= 0.5f;
+        gold+= upgradeCost;
+
         displayedTower = null;
+    }
+
+    private void upgradeTowerClicked() {
+        playing.upgradeTower(displayedTower);
+        gold -= getUpgradeAmount(displayedTower);
     }
 
     public void mouseClicked(int x, int y) {
@@ -219,8 +236,8 @@ public class ActionBar extends Bar {
                     if(sellTower.getBounds().contains(x, y)){
                         sellTowerClicked();
                         return;
-                    }else if(upgradeTower.getBounds().contains(x, y)) {
-
+                    }else if(upgradeTower.getBounds().contains(x, y) && displayedTower.getTier() < 3 && gold >= getUpgradeAmount(displayedTower)) {
+                        upgradeTowerClicked();
                         return;
                     }
             }
@@ -259,7 +276,7 @@ public class ActionBar extends Bar {
                 if(sellTower.getBounds().contains(x, y)){
                     sellTower.setMouseOver(true);
                 return;
-            }else if(upgradeTower.getBounds().contains(x, y)) {
+            }else if(upgradeTower.getBounds().contains(x, y) && displayedTower.getTier() < 3) {
                     upgradeTower.setMouseOver(true);
                     return;
                 }
@@ -282,7 +299,7 @@ public class ActionBar extends Bar {
                 if(sellTower.getBounds().contains(x, y)){
                     sellTower.setMousePressed(true);
                 return;
-            }else if(upgradeTower.getBounds().contains(x, y)){
+            }else if(upgradeTower.getBounds().contains(x, y) && displayedTower.getTier() < 3){
                 upgradeTower.setMousePressed(true);
                 return;
                 }

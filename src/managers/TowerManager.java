@@ -41,6 +41,14 @@ public class TowerManager {
         }
     }
 
+    public void upgradeTower(Tower displayedTower) {
+        for(Tower t : towers){
+            if(t.getId() == displayedTower.getId()){
+                t.upgradeTower();
+            }
+        }
+    }
+
     public void update() {
         for(Tower t : towers){
             t.update();
