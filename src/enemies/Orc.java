@@ -1,13 +1,14 @@
 package enemies;
 
+import managers.EnemyManager;
+
 import static helpers.Constants.Enemies.ORC;
 
 public class Orc extends Enemy{
 
 
 
-    public Orc(float x, float y, int ID) {
-        super(x, y, ID, ORC);
-        health = 50;
+    public Orc(float x, float y, int ID, EnemyManager em) {
+        super(x, y, ID, ORC, em);
     }
 }

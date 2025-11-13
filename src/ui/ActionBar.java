@@ -110,7 +110,7 @@ public class ActionBar extends Bar {
     }
 
     private void drawGoldAmount(Graphics g) {
-        g.drawString("Gold: " + gold, 110, 725);
+        g.drawString("Gold: " + gold + "g", 110, 725);
     }
 
     private void drawWaveInfo(Graphics g) {
@@ -240,6 +240,10 @@ public class ActionBar extends Bar {
 
     public void payForTower(int towerType) {
         this.gold -= helpers.Constants.Towers.GetTowerCost(towerType);
+    }
+
+    public void addGold(int getReward) {
+        this.gold += getReward;
     }
 
 }

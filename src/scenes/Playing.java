@@ -30,6 +30,7 @@ public class Playing extends GameScene implements SceneMethods {
     private WaveManager waveManager;
     private PathPoint start, end;
     private Tower selectedTower;
+    private int goldTick;
 
     public Playing(Game game) throws IOException {
         super(game);
@@ -56,6 +57,10 @@ public class Playing extends GameScene implements SceneMethods {
     public void update() {
         updateTick();
         waveManager.update();
+
+        goldTick++;
+        if(goldTick % (60*3) == 0)
+            actionBar.addGold(1);
 
         if (isAllEnemiesDead()) {
             if (isThereMoreWaves()) {
@@ -250,6 +255,10 @@ public class Playing extends GameScene implements SceneMethods {
     @Override
     public void mouseDragged(int x, int y) {
 
+    }
+
+    public void rewardPlayer(int enemyType) {
+        actionBar.addGold(helpers.Constants.Enemies.GetReward(enemyType));
     }
 
     public TowerManager getTowerManager() {

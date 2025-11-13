@@ -1,12 +1,14 @@
 package enemies;
 
+import managers.EnemyManager;
+
 import static helpers.Constants.Enemies.BAT;
 
 public class Bat extends Enemy {
 
 
 
-    public Bat(float x, float y, int ID) {
-        super(x, y, ID, BAT);
+    public Bat(float x, float y, int ID, EnemyManager em) {
+        super(x, y, ID, BAT, em);
     }
 }
