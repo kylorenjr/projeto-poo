@@ -44,7 +44,6 @@ public abstract class Enemy {
     }
 
     public void kill() {
-
         alive = false;
         health = 0;
     }
