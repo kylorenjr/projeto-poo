@@ -125,8 +125,8 @@ public class EnemyManager {
     }
 
     private boolean isAtEnd(Enemy e) {
-        if (e.getX() == end.getxCord() * 32)
-            if (e.getY() == end.getyCord() * 32)
+        if ((int) e.getX() == end.getxCord() * 32)
+            if ((int) e.getY() == end.getyCord() * 32)
                 return true;
         return false;
     }
