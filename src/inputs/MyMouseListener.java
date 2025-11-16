@@ -1,12 +1,14 @@
 package inputs;
 
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 
 import main.Game;
 import main.GameStates;
 
-public class MyMouseListener implements java.awt.event.MouseListener, java.awt.event.MouseMotionListener {
+public class MyMouseListener implements MouseListener, MouseMotionListener {
 
     private Game game;
 
@@ -35,8 +37,8 @@ public class MyMouseListener implements java.awt.event.MouseListener, java.awt.e
                 break;
             default:
                 break;
-
         }
+
     }
 
     @Override
@@ -54,17 +56,17 @@ public class MyMouseListener implements java.awt.event.MouseListener, java.awt.e
             case EDIT:
                 game.getEditor().mouseMoved(e.getX(), e.getY());
                 break;
+            case GAME_OVER:
+                game.getGameOver().mouseMoved(e.getX(), e.getY());
+                break;
             default:
                 break;
-
         }
-
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-
             switch (GameStates.gameState) {
                 case MENU:
                     game.getMenu().mouseClicked(e.getX(), e.getY());
@@ -82,11 +84,12 @@ public class MyMouseListener implements java.awt.event.MouseListener, java.awt.e
                         throw new RuntimeException(ex);
                     }
                     break;
+                case GAME_OVER:
+                    game.getGameOver().mouseClicked(e.getX(), e.getY());
+                    break;
                 default:
                     break;
-
             }
-
         }
     }
 
@@ -105,11 +108,12 @@ public class MyMouseListener implements java.awt.event.MouseListener, java.awt.e
             case EDIT:
                 game.getEditor().mousePressed(e.getX(), e.getY());
                 break;
+            case GAME_OVER:
+                game.getGameOver().mousePressed(e.getX(), e.getY());
+                break;
             default:
                 break;
-
         }
-
     }
 
     @Override
@@ -127,9 +131,12 @@ public class MyMouseListener implements java.awt.event.MouseListener, java.awt.e
             case EDIT:
                 game.getEditor().mouseReleased(e.getX(), e.getY());
                 break;
-            default:
+            case GAME_OVER:
+                game.getGameOver().mouseReleased(e.getX(), e.getY());
                 break;
 
+            default:
+                break;
         }
     }
 

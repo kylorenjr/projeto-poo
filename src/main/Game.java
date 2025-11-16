@@ -1,16 +1,20 @@
 package main;
 
+import javax.swing.JFrame;
+
 import helpers.LoadSave;
+import inputs.KeyListener;
+import inputs.MyMouseListener;
 import managers.TileManager;
 import scenes.Editing;
+import scenes.GameOver;
+import scenes.Menu;
 import scenes.Playing;
 import scenes.Settings;
-import scenes.Menu;
 
-import javax.swing.JFrame;
 import java.io.IOException;
 
-public class                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Game extends JFrame implements Runnable {
+public class Game extends JFrame implements Runnable {
 
     private GameScreen gameScreen;
     private Thread gameThread;
@@ -18,17 +22,13 @@ public class                                                                    
     private final double FPS_SET = 120.0;
     private final double UPS_SET = 60.0;
 
-    private int updates;
-    private long lastTimeUPS;
-
-    //private MouseListener mouseListener;
-    //private KeyListener keyListener;
 
     private Render render;
     private Menu menu;
     private Playing playing;
     private Settings settings;
     private Editing editing;
+    private GameOver gameOver;
 
     private TileManager tileManager;
 
@@ -43,14 +43,16 @@ public class                                                                    
         add(gameScreen);
         pack();
         setVisible(true);
+
     }
 
-    private void createDefaultLevel(){
+    private void createDefaultLevel() {
         int[] arr = new int[400];
         for (int i = 0; i < arr.length; i++)
             arr[i] = 0;
 
-        LoadSave.CreatLevel("novo_nível", arr);
+        LoadSave.CreateLevel("novo_nível", arr);
+
     }
 
     private void initClasses() throws IOException {
@@ -61,24 +63,18 @@ public class                                                                    
         playing = new Playing(this);
         settings = new Settings(this);
         editing = new Editing(this);
+        gameOver = new GameOver(this);
+
     }
 
-
-    private void start(){
-        gameThread = new Thread(this){};
+    private void start() {
+        gameThread = new Thread(this) {
+        };
 
         gameThread.start();
     }
 
-    private void callUPS(){
-        if(System.currentTimeMillis() - lastTimeUPS >= 1000){
-            System.out.println("UPS: " + updates);
-            updates = 0;
-            lastTimeUPS = System.currentTimeMillis();
-        }
-    }
-
-    private void updateGame(){
+    private void updateGame() {
         switch (GameStates.gameState) {
             case EDIT:
                 editing.update();
@@ -96,6 +92,7 @@ public class                                                                    
     }
 
     public static void main(String[] args) throws IOException {
+
         Game game = new Game();
         game.gameScreen.initInputs();
         game.start();
@@ -110,7 +107,6 @@ public class                                                                    
 
         long lastFrame = System.nanoTime();
         long lastUpdate = System.nanoTime();
-
         long lastTimeCheck = System.currentTimeMillis();
 
         int frames = 0;
@@ -143,7 +139,9 @@ public class                                                                    
             }
 
         }
+
     }
+
 
     public Render getRender() {
         return render;
@@ -165,7 +163,12 @@ public class                                                                    
         return editing;
     }
 
+    public GameOver getGameOver() {
+        return gameOver;
+    }
+
     public TileManager getTileManager() {
         return tileManager;
     }
+
 }

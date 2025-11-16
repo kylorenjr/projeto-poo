@@ -38,7 +38,7 @@ public class LoadSave {
             }
         }
 
-        public static void CreatLevel(String name, int[] idArr){
+        public static void CreateLevel(String name, int[] idArr){
             File newLevel = new File("resources/" + name + ".txt"); //o nome do arquivo será correspondente ao level
             if(newLevel.exists()){
                 System.out.println("O arquivo " + name + " ja existe.");
