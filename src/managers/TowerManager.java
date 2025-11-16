@@ -34,45 +34,41 @@ public class TowerManager {
     }
 
     public void removeTower(Tower displayedTower) {
-        for(int i =0; i < towers.size(); i++){
-            if(towers.get(i).getId() == displayedTower.getId()){
+        for (int i = 0; i < towers.size(); i++)
+            if (towers.get(i).getId() == displayedTower.getId())
                 towers.remove(i);
-            }
-        }
     }
 
     public void upgradeTower(Tower displayedTower) {
-        for(Tower t : towers){
-            if(t.getId() == displayedTower.getId()){
+        for (Tower t : towers)
+            if (t.getId() == displayedTower.getId())
                 t.upgradeTower();
-            }
-        }
     }
 
     public void update() {
-        for(Tower t : towers){
+        for (Tower t : towers) {
             t.update();
-            atackEnemyIfClose(t);
+            attackEnemyIfClose(t);
         }
     }
 
-    private void atackEnemyIfClose(Tower t) {
-            for(Enemy e : playing.getEnemyManager().getEnemies()) {
-                if(e.isAlive())
-                    if(isEnemyInRange(t,e)){
-                        if(t.isCooldownOver()) {
-                            playing.shootEnemy(t, e);
-                            t.resetCooldown();
-                        }
-                    }else{
+    private void attackEnemyIfClose(Tower t) {
+        for (Enemy e : playing.getEnemyManger().getEnemies()) {
+            if (e.isAlive())
+                if (isEnemyInRange(t, e)) {
+                    if (t.isCooldownOver()) {
+                        playing.shootEnemy(t, e);
+                        t.resetCooldown();
+                    }
+                } else {
+
                 }
-            }
+        }
+
     }
 
     private boolean isEnemyInRange(Tower t, Enemy e) {
-
         int range = helpers.Utilz.GetHypoDistance(t.getX(), t.getY(), e.getX(), e.getY());
-
         return range < t.getRange();
     }
 
@@ -91,6 +87,11 @@ public class TowerManager {
 
     public BufferedImage[] getTowerImgs() {
         return towerImgs;
+    }
+
+    public void reset() {
+        towers.clear();
+        towerAmount = 0;
     }
 
 }

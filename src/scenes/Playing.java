@@ -31,6 +31,7 @@ public class Playing extends GameScene implements SceneMethods {
     private PathPoint start, end;
     private Tower selectedTower;
     private int goldTick;
+    private boolean gamePaused;
 
     public Playing(Game game) throws IOException {
         super(game);
@@ -55,32 +56,35 @@ public class Playing extends GameScene implements SceneMethods {
     }
 
     public void update() {
-        updateTick();
-        waveManager.update();
+        if (!gamePaused) {
+            updateTick();
+            waveManager.update();
 
-        goldTick++;
-        if(goldTick % (60*3) == 0)
-            actionBar.addGold(1);
+            goldTick++;
+            if (goldTick % (60 * 3) == 0)
+                actionBar.addGold(1);
 
-        if (isAllEnemiesDead()) {
-            if (isThereMoreWaves()) {
-                waveManager.startWaveTimer();
-                if (isWaveTimerOver()) {
-                    waveManager.increaseWaveIndex();
-                    enemyManager.getEnemies().clear();
-                    waveManager.resetEnemyIndex();
+            if (isAllEnemiesDead()) {
+                if (isThereMoreWaves()) {
+                    waveManager.startWaveTimer();
+                    if (isWaveTimerOver()) {
+                        waveManager.increaseWaveIndex();
+                        enemyManager.getEnemies().clear();
+                        waveManager.resetEnemyIndex();
 
+                    }
                 }
             }
+
+            if (isTimeForNewEnemy()) {
+                spawnEnemy();
+            }
+
+            enemyManager.update();
+            towerManager.update();
+            projManager.update();
         }
 
-        if (isTimeForNewEnemy()) {
-            spawnEnemy();
-        }
-
-        enemyManager.update();
-        towerManager.update();
-        projManager.update();
     }
 
     private boolean isWaveTimerOver() {
@@ -133,12 +137,6 @@ public class Playing extends GameScene implements SceneMethods {
 
         drawSelectedTower(g);
         drawHighlight(g);
-
-        drawWaveInfos(g);
-    }
-
-    private void drawWaveInfos(Graphics g) {
-
 
     }
 
@@ -195,6 +193,7 @@ public class Playing extends GameScene implements SceneMethods {
                         removeGold(selectedTower.getTowerType());
 
                         selectedTower = null;
+
                     }
                 }
             } else {
@@ -207,18 +206,20 @@ public class Playing extends GameScene implements SceneMethods {
 
     private void removeGold(int towerType) {
         actionBar.payForTower(towerType);
-    }
 
-    private Tower getTowerAt(int x, int y) {
-        return towerManager.getTowerAt(x, y);
     }
 
     public void upgradeTower(Tower displayedTower) {
         towerManager.upgradeTower(displayedTower);
+
     }
 
     public void removeTower(Tower displayedTower) {
         towerManager.removeTower(displayedTower);
+    }
+
+    private Tower getTowerAt(int x, int y) {
+        return towerManager.getTowerAt(x, y);
     }
 
     private boolean isTileGrass(int x, int y) {
@@ -230,6 +231,10 @@ public class Playing extends GameScene implements SceneMethods {
     public void shootEnemy(Tower t, Enemy e) {
         projManager.newProjectile(t, e);
 
+    }
+
+    public void setGamePaused(boolean gamePaused) {
+        this.gamePaused = gamePaused;
     }
 
     public void keyPressed(KeyEvent e) {
@@ -273,12 +278,39 @@ public class Playing extends GameScene implements SceneMethods {
         return towerManager;
     }
 
-    public EnemyManager getEnemyManager() {
+    public EnemyManager getEnemyManger() {
         return enemyManager;
     }
 
     public WaveManager getWaveManager() {
         return waveManager;
+    }
+
+    public boolean isGamePaused() {
+        return gamePaused;
+    }
+
+    public void removeOneLife() {
+        actionBar.removeOneLife();
+    }
+
+    public void resetEverything() {
+
+        actionBar.resetEverything();
+
+
+        enemyManager.reset();
+        towerManager.reset();
+        projManager.reset();
+        waveManager.reset();
+
+        mouseX = 0;
+        mouseY = 0;
+
+        selectedTower = null;
+        goldTick = 0;
+        gamePaused = false;
+
     }
 
 }

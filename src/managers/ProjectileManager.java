@@ -2,6 +2,7 @@ package managers;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -19,13 +20,14 @@ public class ProjectileManager {
 
     private Playing playing;
     private ArrayList<Projectile> projectiles = new ArrayList<>();
+    private ArrayList<Explosion> explosions = new ArrayList<>();
     private BufferedImage[] proj_imgs, explo_imgs;
     private int proj_id = 0;
-    private ArrayList<Explosion> explosions = new ArrayList<>();
 
     public ProjectileManager(Playing playing) throws IOException {
         this.playing = playing;
         importImgs();
+
     }
 
     private void importImgs() throws IOException {
@@ -34,16 +36,15 @@ public class ProjectileManager {
 
         for (int i = 0; i < 3; i++)
             proj_imgs[i] = atlas.getSubimage((7 + i) * 32, 32, 32, 32);
-
         importExplosion(atlas);
     }
 
     private void importExplosion(BufferedImage atlas) {
         explo_imgs = new BufferedImage[7];
 
-        for(int i = 0; i < 7; i++){
-            explo_imgs[i] = atlas.getSubimage(i * 32, 64, 32, 32);
-        }
+        for (int i = 0; i < 7; i++)
+            explo_imgs[i] = atlas.getSubimage(i * 32, 32 * 2, 32, 32);
+
     }
 
     public void newProjectile(Tower t, Enemy e) {
@@ -65,7 +66,7 @@ public class ProjectileManager {
 
         float rotate = 0;
 
-        if(type == ARROW){
+        if (type == ARROW) {
             float arcValue = (float) Math.atan(yDist / (float) xDist);
             rotate = (float) Math.toDegrees(arcValue);
 
@@ -83,79 +84,85 @@ public class ProjectileManager {
                 p.move();
                 if (isProjHittingEnemy(p)) {
                     p.setActive(false);
-                    if(p.getProjectileType() == BOMB){
+                    if (p.getProjectileType() == BOMB) {
                         explosions.add(new Explosion(p.getPos()));
                         explodeOnEnemies(p);
                     }
-                } else {
-                    // we do nothing
+                } else if (isProjOutsideBounds(p)) {
+                    p.setActive(false);
                 }
             }
-        for(Explosion e : explosions){
-            if(e.getIndex() < 7)
-                e.update();
-        }
 
+        for (Explosion e : explosions)
+            if (e.getIndex() < 7)
+                e.update();
     }
 
-    private void explodeOnEnemies(Projectile p){
-        for(Enemy e : playing.getEnemyManager().getEnemies()) {
-            if(e.isAlive()){
+    private void explodeOnEnemies(Projectile p) {
+        for (Enemy e : playing.getEnemyManger().getEnemies()) {
+            if (e.isAlive()) {
                 float radius = 40.0f;
 
                 float xDist = Math.abs(p.getPos().x - e.getX());
                 float yDist = Math.abs(p.getPos().y - e.getY());
 
-                float realDist = (float)Math.hypot(xDist, yDist);
+                float realDist = (float) Math.hypot(xDist, yDist);
 
-                if(realDist <= radius){
+                if (realDist <= radius)
                     e.hurt(p.getDmg());
-                }
             }
+
         }
+
     }
 
     private boolean isProjHittingEnemy(Projectile p) {
-        for (Enemy e : playing.getEnemyManager().getEnemies()) {
-            if(e.isAlive()){
+        for (Enemy e : playing.getEnemyManger().getEnemies()) {
+            if (e.isAlive())
                 if (e.getBounds().contains(p.getPos())) {
                     e.hurt(p.getDmg());
-                    if(p.getProjectileType() == CHAINS){
+                    if (p.getProjectileType() == CHAINS)
                         e.slow();
-                    }
+
                     return true;
                 }
-            }
         }
         return false;
     }
 
-    public void draw(Graphics g) {
+    private boolean isProjOutsideBounds(Projectile p) {
+        if (p.getPos().x >= 0)
+            if (p.getPos().x <= 640)
+                if (p.getPos().y >= 0)
+                    if (p.getPos().y <= 800)
+                        return false;
+        return true;
+    }
 
+    public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
         for (Projectile p : projectiles)
             if (p.isActive()) {
-                if(p.getProjectileType() == ARROW){
+                if (p.getProjectileType() == ARROW) {
                     g2d.translate(p.getPos().x, p.getPos().y);
                     g2d.rotate(Math.toRadians(p.getRotation()));
                     g2d.drawImage(proj_imgs[p.getProjectileType()], -16, -16, null);
                     g2d.rotate(-Math.toRadians(p.getRotation()));
                     g2d.translate(-p.getPos().x, -p.getPos().y);
-                }else{
-                    g2d.drawImage(proj_imgs[p.getProjectileType()], (int)p.getPos().x - 16, (int)p.getPos().y - 16, null);
+                } else {
+                    g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
                 }
             }
+
         drawExplosions(g2d);
 
     }
 
     private void drawExplosions(Graphics2D g2d) {
-        for(Explosion e :  explosions){
-            if(e.getIndex() < 7) {
-                g2d.drawImage(explo_imgs[e.getIndex()], (int)e.getPos().x - 16, (int)e.getPos().y - 16, null);
-            }
-        }
+        for (Explosion e : explosions)
+            if (e.getIndex() < 7)
+                g2d.drawImage(explo_imgs[e.getIndex()], (int) e.getPos().x - 16, (int) e.getPos().y - 16, null);
     }
 
     private int getProjType(Tower t) {
@@ -170,22 +177,21 @@ public class ProjectileManager {
         return 0;
     }
 
-    public class Explosion{
+    public class Explosion {
 
         private Point2D.Float pos;
-        private int exploTick = 0, exploIndex = 0;
+        private int exploTick, exploIndex;
 
         public Explosion(Point2D.Float pos) {
             this.pos = pos;
         }
 
         public void update() {
-
-                exploTick++;
-                if(exploTick>= 12) {
-                    exploTick = 0;
-                    exploIndex++;
-                }
+            exploTick++;
+            if (exploTick >= 6) {
+                exploTick = 0;
+                exploIndex++;
+            }
         }
 
         public int getIndex() {
@@ -195,6 +201,13 @@ public class ProjectileManager {
         public Point2D.Float getPos() {
             return pos;
         }
+    }
+
+    public void reset() {
+        projectiles.clear();
+        explosions.clear();
+
+        proj_id = 0;
     }
 
 }

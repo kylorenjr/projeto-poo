@@ -35,12 +35,6 @@ public class EnemyManager {
         this.end = end;
 
         loadEffectImg();
-
-//		addEnemy(ORC);
-//		addEnemy(BAT);
-//		addEnemy(KNIGHT);
-//		addEnemy(WOLF);
-
         loadEnemyImgs();
     }
 
@@ -74,7 +68,7 @@ public class EnemyManager {
             e.move(GetSpeed(e.getEnemyType()), e.getLastDir());
         } else if (isAtEnd(e)) {
             e.kill();
-            System.out.println("A life is lost!");
+            playing.removeOneLife();
         } else {
             setNewDirectionAndMove(e);
         }
@@ -125,8 +119,8 @@ public class EnemyManager {
     }
 
     private boolean isAtEnd(Enemy e) {
-        if ((int) e.getX() == end.getxCord() * 32)
-            if ((int) e.getY() == end.getyCord() * 32)
+        if (e.getX() == end.getxCord() * 32)
+            if (e.getY() == end.getyCord() * 32)
                 return true;
         return false;
     }
@@ -224,6 +218,10 @@ public class EnemyManager {
 
     public void rewardPlayer(int enemyType) {
         playing.rewardPlayer(enemyType);
+    }
+
+    public void reset() {
+        enemies.clear();
     }
 
 }
