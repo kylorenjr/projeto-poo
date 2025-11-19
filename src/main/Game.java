@@ -35,7 +35,7 @@ public class Game extends JFrame implements Runnable {
     public Game() throws IOException {
 
         initClasses();
-        createDefaultLevel();
+        //createDefaultLevel();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
