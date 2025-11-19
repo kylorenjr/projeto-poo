@@ -40,6 +40,7 @@ public class Game extends JFrame implements Runnable {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+        setTitle("HogRider Tower Defense");
         add(gameScreen);
         pack();
         setVisible(true);
