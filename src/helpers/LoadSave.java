@@ -17,7 +17,7 @@ public class LoadSave {
         public static BufferedImage getSpriteAtlas() throws IOException {
 
             BufferedImage img = null;
-            InputStream is = LoadSave.class.getClassLoader().getResourceAsStream("new_spriteatlas.png");
+            InputStream is = LoadSave.class.getClassLoader().getResourceAsStream("spriteatlas_torres_inimigos.png");
 
             try {
                 img = ImageIO.read(is);
