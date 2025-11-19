@@ -10,10 +10,10 @@ import java.util.Scanner;
 
 public class LoadSave {
 
-    // --- CARREGAMENTO DE IMAGENS ---
+
     public static BufferedImage getSpriteAtlas() {
         BufferedImage img = null;
-        // A barra "/" indica que busca na raiz do JAR (onde a pasta resources é descompactada)
+
         InputStream is = LoadSave.class.getResourceAsStream("/spriteatlas_torres_inimigos.png");
 
         try {
@@ -28,9 +28,7 @@ public class LoadSave {
         return img;
     }
 
-    // --- LEITURA DE ARQUIVOS (CORRIGIDO PARA JAR) ---
 
-    // Mudamos de 'File' para 'InputStream'
     private static ArrayList<Integer> ReadFromFile(InputStream is) {
         ArrayList<Integer> list = new ArrayList<>();
 
@@ -39,7 +37,6 @@ public class LoadSave {
 
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
-                // Pequena proteção contra linhas vazias
                 if (!line.trim().isEmpty()) {
                     list.add(Integer.parseInt(line.trim()));
                 }
@@ -54,7 +51,7 @@ public class LoadSave {
     }
 
     public static ArrayList<PathPoint> GetLevelPathPoints(String name) {
-        // Tenta carregar o arquivo de dentro do JAR
+
         InputStream is = LoadSave.class.getResourceAsStream("/" + name + ".txt");
 
         if (is != null) {
@@ -73,7 +70,6 @@ public class LoadSave {
     }
 
     public static int[][] GetLevelData(String name) {
-        // Tenta carregar o arquivo de dentro do JAR
         InputStream is = LoadSave.class.getResourceAsStream("/" + name + ".txt");
 
         if (is != null) {
@@ -85,18 +81,7 @@ public class LoadSave {
         }
     }
 
-    // --- MÉTODOS DE SALVAR (AVISO IMPORTANTE) ---
-    /*
-     * IMPORTANTE:
-     * Você NÃO consegue salvar/criar arquivos DENTRO do JAR enquanto ele roda.
-     * Os métodos abaixo (CreateLevel, SaveLevel) só vão funcionar enquanto você
-     * estiver rodando pelo IntelliJ.
-     * Se você tentar usar o editor de níveis no JAR exportado, ele vai falhar ou
-     * não salvar nada, pois o JAR é "somente leitura".
-     */
-
     public static void CreateLevel(String name, int[] idArr) {
-        // Mantivemos File aqui pois salvar exige acesso ao DISCO, não ao JAR.
         File newLevel = new File("resources/" + name + ".txt");
         if (newLevel.exists()) {
             System.out.println("O arquivo " + name + " ja existe.");
