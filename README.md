@@ -1,22 +1,48 @@
+# 🛡️ Tower Defense - Projeto POO
+
+Um jogo de Tower Defense desenvolvido em Java como projeto da disciplina de Programação Orientada a Objetos.
+
 ## 🚀 Como Rodar o Projeto
 
-Este projeto pode ser executado em qualquer sistema operacional (Windows, macOS ou Linux), desde que você tenha os pré-requisitos instalados.
+Este projeto pode ser executado em qualquer sistema operacional (Windows, macOS ou Linux).
 
 ### 📋 Pré-requisitos
 
-Antes de começar, certifique-se de que você tem:
+Para rodar o jogo, é necessário ter uma versão recente do Java instalada:
 
-1.  **Java Development Kit (JDK)**: Versão 17 ou superior.
-    * Você pode baixar o [OpenJDK aqui](https://jdk.java.net/17/).
-2.  **Git** (Opcional, apenas para construir a partir do código-fonte).
-    * Você pode [baixar o Git aqui](https://git-scm.com/downloads).
+1.  **Java Development Kit (JDK)**: Versão **24** ou superior.
+    * *Atenção: Versões LTS anteriores (como Java 17 ou 21) NÃO rodarão este projeto.*
+    * **Download Recomendado:** [Oracle JDK 25](https://www.oracle.com/java/technologies/downloads/) ou [OpenJDK 24](https://jdk.java.net/24/).
 
 ---
 
-### 🔧 Instruções
+### 🎮 Opção 1: Executando o Jogo (Arquivo .JAR)
 
-1.  Abra seu terminal (Prompt de Comando, PowerShell, Terminal, etc.).
-2.  Clone o repositório e entre na pasta do projeto:
+Esta é a forma mais simples, recomendada para quem quer apenas jogar.
+
+#### **Modo A: Sem Terminal (Duplo Clique)**
+1.  Certifique-se de ter o Java 24 ou 25 instalado.
+2.  Baixe o arquivo `projeto-poo.jar`.
+3.  **Dê dois cliques** no arquivo.
+    * *O jogo deve abrir imediatamente.*
+
+#### **Modo B: Via Terminal **
+Se o duplo clique não funcionar, use o terminal para ver o log de execução.
+
+1.  Abra o terminal na pasta onde está o arquivo `.jar`.
+2.  Execute o comando:
+    ```bash
+    java -jar projeto-poo.jar
+    ```
+
+---
+
+### 💻 Opção 2: Rodando pelo Código Fonte (Para Desenvolvedores)
+
+Use esta opção se você deseja modificar o código ou compilar manualmente.
+
+1.  Abra seu terminal.
+2.  Clone o repositório e entre na pasta:
     ```bash
     git clone [https://github.com/kylorenjr/projeto-poo.git](https://github.com/kylorenjr/projeto-poo.git)
     cd projeto-poo
@@ -26,19 +52,20 @@ Antes de começar, certifique-se de que você tem:
     ```bash
     cd src
     ```
-    *O seu terminal deve estar agora em `.../projeto-poo/src>`*
 
 4.  **Compile** todos os arquivos `.java` de todos os pacotes:
     ```bash
     javac main/*.java enemies/*.java helpers/*.java inputs/*.java managers/*.java objects/*.java scenes/*.java ui/*.java
     ```
-    *(Isso diz ao compilador para olhar dentro de cada pasta de pacote e compilar todos os arquivos .java que encontrar)*
 
-5.  **Execute** o projeto chamando a classe `Game` dentro do pacote `main`:
+5.  **Execute** o projeto chamando a classe principal:
     ```bash
     java main.Game
     ```
-## DIAGRAMA DE CLASSES
+
+---
+
+## 📊 Diagrama de Classes
 
 Aqui está o diagrama de classes do projeto, mostrando as principais entidades e suas relações.
 
@@ -121,4 +148,3 @@ classDiagram
     class Render
     
     Projectile --- Render
-```
