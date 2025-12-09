@@ -26,7 +26,7 @@ Esta é a forma mais simples, recomendada para quem quer apenas jogar.
 3.  **Dê dois cliques** no arquivo.
     * *O jogo deve abrir imediatamente.*
 
-#### **Modo B: Via Terminal **
+#### Modo B: Via Terminal 
 Se o duplo clique não funcionar, use o terminal para ver o log de execução.
 
 1.  Abra o terminal na pasta onde está o arquivo `.jar`.
@@ -93,18 +93,15 @@ classDiagram
     }
     class Playing
     class Editing
-    class Settings
     class Menu
 
     %% -- Relações das Cenas --
     GameScene <|-- Playing
     GameScene <|-- Editing
-    GameScene <|-- Settings
     GameScene <|-- Menu
     
     SceneMethods <|.. Playing
     SceneMethods <|.. Editing
-    SceneMethods <|.. Settings
     SceneMethods <|.. Menu
     
     GameScene --> Constants
