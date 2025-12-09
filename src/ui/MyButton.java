@@ -63,7 +63,7 @@ public class MyButton {
         if (mouseOver)
             g.setColor(Color.gray);
         else
-            g.setColor(Color.WHITE);
+            g.setColor(new Color(0,153,76));
         g.fillRect(x, y, width, height);
 
     }

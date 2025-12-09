@@ -89,7 +89,7 @@ public class ToolBar extends Bar{
 
     public void draw(Graphics g) {
         //Background
-        g.setColor(new Color(220,123,15));
+        g.setColor(Color.yellow);
         g.fillRect(x, y, width, height);
 
         //Buttons

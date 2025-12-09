@@ -1,6 +1,6 @@
 package scenes;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +39,9 @@ public class Menu extends GameScene implements SceneMethods {
 
     @Override
     public void render(Graphics g) {
+
+        g.setColor(new Color(255, 255, 102));
+        g.fillRect(0, 0, 640, 800);
 
         drawButtons(g);
     }

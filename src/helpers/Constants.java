@@ -42,11 +42,11 @@ public class Constants {
         public static String GetName(int towerType) {
             switch (towerType) {
                 case CANNON:
-                    return "Cannon";
+                    return "Canhão";
                 case ARCHER:
-                    return "Archer";
+                    return "Tesla";
                 case WIZARD:
-                    return "Wizard";
+                    return "Mago";
             }
             return "";
         }
