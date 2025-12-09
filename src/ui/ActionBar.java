@@ -131,7 +131,7 @@ public class ActionBar extends Bar {
 
         if (isTowerCostMoreThanCurrentGold()) {
             g.setColor(Color.RED);
-            g.drawString("Dinheiro Insuficiente", 270, 725);
+            g.drawString("Sem Ouro", 270, 725);
 
         }
 
