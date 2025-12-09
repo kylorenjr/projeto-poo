@@ -32,6 +32,9 @@ public class GameOver extends GameScene implements SceneMethods {
 
     @Override
     public void render(Graphics g) {
+        g.setColor(new Color(255, 255, 102));
+        g.fillRect(0, 0, 640, 800);
+
         // game over text
         g.setFont(new Font("LucidaSans", Font.BOLD, 50));
         g.setColor(Color.black);

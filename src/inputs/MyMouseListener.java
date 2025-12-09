@@ -25,9 +25,6 @@ public class MyMouseListener implements MouseListener, MouseMotionListener {
             case PLAYING:
                 game.getPlaying().mouseDragged(e.getX(), e.getY());
                 break;
-            case SETTINGS:
-                game.getSettings().mouseDragged(e.getX(), e.getY());
-                break;
             case EDIT:
                 try {
                     game.getEditor().mouseDragged(e.getX(), e.getY());
@@ -50,9 +47,6 @@ public class MyMouseListener implements MouseListener, MouseMotionListener {
             case PLAYING:
                 game.getPlaying().mouseMoved(e.getX(), e.getY());
                 break;
-            case SETTINGS:
-                game.getSettings().mouseMoved(e.getX(), e.getY());
-                break;
             case EDIT:
                 game.getEditor().mouseMoved(e.getX(), e.getY());
                 break;
@@ -73,9 +67,6 @@ public class MyMouseListener implements MouseListener, MouseMotionListener {
                     break;
                 case PLAYING:
                     game.getPlaying().mouseClicked(e.getX(), e.getY());
-                    break;
-                case SETTINGS:
-                    game.getSettings().mouseClicked(e.getX(), e.getY());
                     break;
                 case EDIT:
                     try {
@@ -102,9 +93,6 @@ public class MyMouseListener implements MouseListener, MouseMotionListener {
             case PLAYING:
                 game.getPlaying().mousePressed(e.getX(), e.getY());
                 break;
-            case SETTINGS:
-                game.getSettings().mousePressed(e.getX(), e.getY());
-                break;
             case EDIT:
                 game.getEditor().mousePressed(e.getX(), e.getY());
                 break;
@@ -124,9 +112,6 @@ public class MyMouseListener implements MouseListener, MouseMotionListener {
                 break;
             case PLAYING:
                 game.getPlaying().mouseReleased(e.getX(), e.getY());
-                break;
-            case SETTINGS:
-                game.getSettings().mouseReleased(e.getX(), e.getY());
                 break;
             case EDIT:
                 game.getEditor().mouseReleased(e.getX(), e.getY());
