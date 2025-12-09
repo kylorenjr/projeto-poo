@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/projeto_poo_jar</output-path>
     <root id="archive" name="projeto-poo.jar">
       <element id="module-output" name="projeto-poo" />
+      <element id="dir-copy" path="$PROJECT_DIR$/resources" />
     </root>
   </artifact>
 </component>
