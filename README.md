@@ -93,18 +93,15 @@ classDiagram
     }
     class Playing
     class Editing
-    class Settings
     class Menu
 
     %% -- Relações das Cenas --
     GameScene <|-- Playing
     GameScene <|-- Editing
-    GameScene <|-- Settings
     GameScene <|-- Menu
     
     SceneMethods <|.. Playing
     SceneMethods <|.. Editing
-    SceneMethods <|.. Settings
     SceneMethods <|.. Menu
     
     GameScene --> Constants
